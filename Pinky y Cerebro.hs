@@ -64,3 +64,6 @@ hacerExperimento = superpoderes.(inteligenciaSuperior 10).pinkificar
 
 --PUNTO 5
 type Reporte = (Ord a) =>[Animal]->[String]->[String]->[a] --Esta firma es lo que pide el ejercicio?
+
+--PUNTO 6
+--Los experimentos que pueden hacerse son aquellos que no dependan de la lista de habilidades del animal, como Criterio de Éxito.
