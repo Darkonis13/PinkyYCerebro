@@ -35,20 +35,19 @@ sabeHablar::Animal->Bool
 sabeHablar unAnimal = any (=="Hablar") (capacidades unAnimal)
 
 noTanCuerdo::CriterioDeExito
-noTanCuerdo unAnimal = (>2).length.(filter pinkiesco) (capacidades unAnimal)
+noTanCuerdo unAnimal = tieneMasDeDosPinkiescas.capacidades unAnimal
+
+tieneMasDeDosPinkiescas :: [String]->Bool
+tieneMasDeDosPinkiescas = (>2).length.(filter pinkiesco)
 
 --PUNTO 4
-data Experimento = Experimento{transformaciones::[String],criterioDeExito::CriterioDeExito}
+data Experimento = Experimento{transformaciones::[Transformacion],criterioDeExito::CriterioDeExito}
 
---experimentoExitoso experimento unAnimal = (criterioDeExito experimento) (aplicarTransformaciones unAnimal transformaciones)
+experimentoExitoso :: Experimento->CriterioDeExito
+experimentoExitoso unExperimento = all (criterioDeExito unExperimento).aplicar (transformaciones unExperimento)
 
---aplicarTransformaciones unAnimal transformaciones = map (aplicarTransformacion unAnimal) (transformaciones experimento)
-
---aplicarTransformacion unAnimal transformacion = transformacion unAnimal
-
---Necesito una función que hicimos llamada pam que es como map pero le aplica una lista de cosas a un único elemento.
-
-
+aplicar :: [Transformacion]->Animal->[Animal]
+aplicar transformaciones unAnimal = unificar.map ($ unAnimal) transformaciones
 
 --"En un ratón de coeficiente intelectual 17, con habilidades de destruenglonir el mundo y hacer planes desalmados,
 -- hacer un experimento que consista en pinkificarlo, luego darle inteligencia superior de 10 y por último darle superpoderes.
@@ -62,8 +61,5 @@ consulta unAnimal = antropomorfico (hacerExperimento unAnimal)
 hacerExperimento :: Transformacion
 hacerExperimento = superpoderes.(inteligenciaSuperior 10).pinkificar
 
---PUNTO 5
-type Reporte = (Ord a) =>[Animal]->[String]->[String]->[a] --Esta firma es lo que pide el ejercicio?
-
 --PUNTO 6
---Los experimentos que pueden hacerse son aquellos que no dependan de la lista de habilidades del animal, como Criterio de Éxito.
+--Los experimentos que pueden hacerse son aquellos que no dependan de la lista de habilidades completa del animal, puesto que nunca se terminará de generar.
