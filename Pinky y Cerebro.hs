@@ -59,15 +59,23 @@ experimentoConRaton = Experimento{transformaciones=[superpoderes,inteligenciaSup
 --Como resultado, el criterio de éxito no se cumple.
 
 --PUNTO 5
- 
-listaDeCoeficientes :: [Animal]->[String]->Experimento->[Int]
-listaDeCoeficientes animales unasCapacidades unExperimento = listaPedida animales unasCapacidades unExperimento coeficienteIntelectual (>0)
+listaDeCoeficientes :: [String]->Experimento->[Animal]->[Int]
+listaDeCoeficientes = generarListaPedida coeficienteIntelectual (>0)
 
-listaPedida :: [Animal]-> [String]-> Experimento->(Animal->a)->(Int->Bool)->[a]
-listaPedida animales unasCapacidades unExperimento elementoPedido unaCondicion = map (elementoPedido) . filtrarLosQueCumplen unaCondicion unasCapacidades .map (aplicarTransformaciones unExperimento) $ animales
+listaDeEspecies :: [String]->Experimento->[Animal]->[String]
+listaDeEspecies unasCapacidades = generarListaPedida especie (==(length unasCapacidades)) unasCapacidades
 
-filtrarLosQueCumplen :: (Int->Bool)->[String]->[Animal]->[Animal]
-filtrarLosQueCumplen unaCondicion unasCapacidades = filter (unaCondicion).length.(intersect unasCapacidades).capacidades
+listaDeCantidadDeCapacidades :: [String]->Experimento->[Animal]->[Int]
+listaDeCantidadDeCapacidades = generarListaPedida (length.capacidades) (==0)
+
+generarListaPedida :: (Animal->a)->(Int->Bool)->[String]->Experimento->[Animal]->[a]
+generarListaPedida elementoPedido elementoDeComparacion unasCapacidades unExperimento = map (elementoPedido) .filter (compararListas elementoDeComparacion unasCapacidades) . aplicarExperimentoAAnimales unExperimento
+
+aplicarExperimentoAAnimales :: Experimento->[Animal]->[Animal]
+aplicarExperimentoAAnimales unExperimento = map (aplicarTransformaciones unExperimento)  
+
+compararListas :: (Int->Bool)->[String]->Animal->Bool
+compararListas elementoDeComparacion unasCapacidades unosAnimales = elementoDeComparacion.length.intersect unasCapacidades $ (capacidades unosAnimales)
 
 --PUNTO 6
 --Los experimentos que pueden hacerse son aquellos que no dependan de la lista de habilidades completa del animal, puesto que nunca se terminará de generar.
